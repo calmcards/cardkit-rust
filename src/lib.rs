@@ -8,7 +8,7 @@ pub const PIXEL_HEIGHT: usize = 480;
 
 #[repr(transparent)]
 pub struct TextBuffer {
-    data: [[u32; TEXT_WIDTH]; TEXT_HEIGHT],
+    pub data: [[u32; TEXT_WIDTH]; TEXT_HEIGHT],
 }
 
 impl Default for TextBuffer {
@@ -118,7 +118,7 @@ impl TextBuffer {
 
 #[derive(Clone, Copy, Debug, Default)]
 pub struct TextPos{
-    vec: Vec2
+    pub vec: Vec2
 }
 
 impl TextPos {
@@ -160,7 +160,7 @@ impl From<PixelPos> for TextPos {
 
 #[repr(transparent)]
 pub struct PixelsBuffer {
-    data: [[u8; PIXEL_WIDTH]; PIXEL_HEIGHT],
+    pub data: [[u8; PIXEL_WIDTH]; PIXEL_HEIGHT],
 }
 
 impl Default for PixelsBuffer {
@@ -192,7 +192,7 @@ impl PixelsBuffer {
 
 #[derive(Clone, Copy, Debug, Default)]
 pub struct PixelPos{
-    vec: Vec2
+    pub vec: Vec2
 }
 
 impl PixelPos {
