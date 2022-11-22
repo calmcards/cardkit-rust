@@ -3,6 +3,7 @@ name = "cardkit"
 version = "0.1.0-alpha.1"
 edition = "2021"
 license = "MIT"
+homepage = "https://calm.cards/"
 
 [dependencies]
 ultraviolet = { version = "0.6", features = [] }
