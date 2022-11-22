@@ -60,7 +60,7 @@ impl TextBuffer {
         self
     }
 
-    pub fn draw_box(&mut self, top_left: TextPos, inner_width: usize, inner_height: usize, style: BoxStyle) -> &Self {
+    pub fn draw_box(&mut self, top_left: &TextPos, inner_width: usize, inner_height: usize, style: BoxStyle) -> &Self {
         let mut p = top_left.clone();
 
         self.set(&p, match style {
