@@ -159,15 +159,15 @@ impl From<PixelPos> for TextPos {
 }
 
 #[repr(transparent)]
-pub struct PixelsBuffer {
+pub struct PixelBuffer {
     pub data: [[u8; PIXEL_WIDTH]; PIXEL_HEIGHT],
 }
 
-impl Default for PixelsBuffer {
+impl Default for PixelBuffer {
     fn default() -> Self { Self{data: [[0; PIXEL_WIDTH]; PIXEL_HEIGHT]} }
 }
 
-impl PixelsBuffer {
+impl PixelBuffer {
     pub fn get(&self, at: &PixelPos) -> Option<u8> {
         let x = at.vec.x;
         let y = at.vec.y;
