@@ -1,6 +1,6 @@
 [package]
 name = "cardkit"
-version = "0.1.0-alpha.1"
+version = "0.1.0-alpha.2"
 edition = "2021"
 license = "MIT"
 homepage = "https://calm.cards/"
