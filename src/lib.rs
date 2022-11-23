@@ -212,7 +212,7 @@ impl From<TextPos> for PixelPos  {
     }
 }
 
-#[repr(C, u32)]
+#[repr(u32)]
 pub enum PointerType {
     Mouse,
     Pen,
