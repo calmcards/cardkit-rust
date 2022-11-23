@@ -23,9 +23,8 @@ pub enum BoxStyle {
 }
 
 impl TextBuffer {
-    pub fn get(&self, at: &TextPos) -> Option<char> {
-        let x = at.vec.x;
-        let y = at.vec.y;
+    pub fn get(&self, at: (f32, f32)) -> Option<char> {
+        let (x, y) = at;
         if 0.0 <= x && x < TEXT_WIDTH as f32 && 0.0 <= y && y < TEXT_HEIGHT as f32 {
             let rx = x.round() as usize;
             let ry = y.round() as usize;
@@ -34,9 +33,8 @@ impl TextBuffer {
         None
     }
 
-    pub fn set(&mut self, at: &TextPos, c: char) -> &mut Self {
-        let x = at.vec.x;
-        let y = at.vec.y;
+    pub fn set(&mut self, at: (f32, f32), c: char) -> &mut Self {
+        let (x, y) = at;
         if 0.0 <= x && x < TEXT_WIDTH as f32 && 0.0 <= y && y < TEXT_HEIGHT as f32 {
             let rx = x.round() as usize;
             let ry = y.round() as usize;
@@ -51,61 +49,68 @@ impl TextBuffer {
     }
     */
 
-    pub fn draw_label(&mut self, left_edge: &TextPos, s: String) -> &Self {
-        let mut p = left_edge.clone();
+    pub fn draw_label(&mut self, left_edge: (f32, f32), s: String) -> &Self {
+        let mut p: vec2 = top_left.into();
         for c in s.chars() {
-            self.set(&p, c);
-            p.right();
+            self.set(p.into(), c);
+            p += (1.0, 0.0).into();
         }
         self
     }
 
-    pub fn draw_box(&mut self, top_left: &TextPos, inner_width: usize, inner_height: usize, style: BoxStyle) -> &Self {
-        let mut p = top_left.clone();
+    pub fn draw_box(&mut self, top_left: (f32, f32), inner_width: usize, inner_height: usize, style: BoxStyle) -> &Self {
+        let mut p: vec2 = top_left.into();
 
-        self.set(&p, match style {
+        self.set(p, match style {
             BoxStyle::Thin => '┌',
             BoxStyle::Thick => '┏',
             BoxStyle::Double => '╔'
         });
         for _ in 0..inner_width {
-            self.set(p.right(), match style {
+            p += (1.0, 0.0).into();
+            self.set(p.into(), match style {
                 BoxStyle::Thin => '─',
                 BoxStyle::Thick => '━',
                 BoxStyle::Double => '═'
             });
         }
-        self.set(p.right(), match style {
+        p += (1.0, 0.0).into();
+        self.set(p.into(), match style {
             BoxStyle::Thin => '┐',
             BoxStyle::Thick => '┓',
             BoxStyle::Double => '╗'
         });
         for _ in 0..inner_height {
-            self.set(p.down(), match style {
+            p += (0.0, 1.0).into();
+            self.set(p.into(), match style {
                 BoxStyle::Thin => '│',
                 BoxStyle::Thick => '┃',
                 BoxStyle::Double => '║'
             });
         }
-        self.set(p.down(), match style {
+        p += (0.0, 1.0).into();
+        self.set(p.into(), match style {
             BoxStyle::Thin => '┘',
             BoxStyle::Thick => '┛',
             BoxStyle::Double => '╝'
         });
         for _ in 0..inner_width {
-            self.set(p.left(), match style {
+            p += (-1.0, 0.0).into();
+            self.set(p.into(), match style {
                 BoxStyle::Thin => '─',
                 BoxStyle::Thick => '━',
                 BoxStyle::Double => '═'
             });
         }
-        self.set(p.left(), match style {
+        p += (-1.0, 0.0).into();
+        self.set(p.into(), match style {
             BoxStyle::Thin => '└',
             BoxStyle::Thick => '┗',
             BoxStyle::Double => '╚'
         });
         for _ in 0..inner_height {
-            self.set(p.up(), match style {
+            p += (0.0, -1.0).into();
+            self.set(p.into(), match style {
                 BoxStyle::Thin => '│',
                 BoxStyle::Thick => '┃',
                 BoxStyle::Double => '║'
@@ -113,48 +118,6 @@ impl TextBuffer {
         }
 
         self
-    }
-}
-
-#[derive(Clone, Copy, Debug, Default)]
-pub struct TextPos{
-    pub vec: Vec2
-}
-
-impl TextPos {
-    pub const fn new(x: f32, y: f32) -> Self {
-        Self { vec: Vec2::new(x, y) }
-    }
-
-    pub fn up(&mut self) -> &mut Self {
-        self.vec.y -= 1.0;
-        self
-    }
-
-    pub fn right(&mut self) -> &mut Self {
-        self.vec.x += 1.0;
-        self
-    }
-
-    pub fn down(&mut self) -> &mut Self {
-        self.vec.y += 1.0;
-        self
-    }
-
-    pub fn left(&mut self) -> &mut Self {
-        self.vec.x -= 1.0;
-        self
-    }
-}
-
-impl From<PixelPos> for TextPos {
-    fn from(pos: PixelPos) -> Self {
-        let x = pos.vec.x;
-        let y = pos.vec.y;
-
-        TextPos::new(
-            (x / ((PIXEL_WIDTH as f32 / TEXT_WIDTH as f32) as f32)).round(),
-            (y / ((PIXEL_HEIGHT as f32 / TEXT_HEIGHT as f32) as f32)).round())
     }
 }
 
@@ -168,9 +131,8 @@ impl Default for PixelBuffer {
 }
 
 impl PixelBuffer {
-    pub fn get(&self, at: &PixelPos) -> Option<u8> {
-        let x = at.vec.x;
-        let y = at.vec.y;
+    pub fn get(&self, at: (f32, f32)) -> Option<u8> {
+        let (x, y) = at;
         if 0.0 <= x && x < PIXEL_WIDTH as f32 && 0.0 <= y && y < PIXEL_HEIGHT as f32 {
             let rx = x.round() as usize;
             let ry = y.round() as usize;
@@ -179,9 +141,8 @@ impl PixelBuffer {
         None
     }
 
-    pub fn set(&mut self, at: &PixelPos, v: u8) {
-        let x = at.vec.x;
-        let y = at.vec.y;
+    pub fn set(&mut self, at: (f32, f32), v: u8) {
+        let (x, y) = at;
         if 0.0 <= x && x < PIXEL_WIDTH as f32 && 0.0 <= y && y < PIXEL_HEIGHT as f32 {
             let rx = x.round() as usize;
             let ry = y.round() as usize;
@@ -190,26 +151,18 @@ impl PixelBuffer {
     }
 }
 
-#[derive(Clone, Copy, Debug, Default)]
-pub struct PixelPos{
-    pub vec: Vec2
+pub fn pixelspaceToTextspace(at: (f32, f32)) -> (f32, f32) {
+    let (x, y) = at;
+
+    ((x / ((PIXEL_WIDTH as f32 / TEXT_WIDTH as f32) as f32)),
+     (y / ((PIXEL_HEIGHT as f32 / TEXT_HEIGHT as f32) as f32)))
 }
 
-impl PixelPos {
-    pub const fn new(x: f32, y: f32) -> Self {
-        Self { vec: Vec2::new(x, y) }
-    }
-}
+pub fn textspaceToPixelspace(at: (f32, f32)) -> (f32, f32) {
+    let (x, y) = at;
 
-impl From<TextPos> for PixelPos  {
-    fn from(pos: TextPos) -> Self {
-        let x = pos.vec.x;
-        let y = pos.vec.y;
-
-        PixelPos::new(
-            (x * ((PIXEL_WIDTH as f32 / TEXT_WIDTH as f32) as f32)).round(),
-            (y * ((PIXEL_HEIGHT as f32 / TEXT_HEIGHT as f32) as f32)).round())
-    }
+    ((x * ((PIXEL_WIDTH as f32 / TEXT_WIDTH as f32) as f32)),
+     (y * ((PIXEL_HEIGHT as f32 / TEXT_HEIGHT as f32) as f32)))
 }
 
 #[repr(u32)]
