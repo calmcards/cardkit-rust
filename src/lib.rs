@@ -151,14 +151,14 @@ impl PixelBuffer {
     }
 }
 
-pub fn pixelspaceToTextspace(at: (f32, f32)) -> (f32, f32) {
+pub fn pixelspace_to_textspace(at: (f32, f32)) -> (f32, f32) {
     let (x, y) = at;
 
     ((x / ((PIXEL_WIDTH as f32 / TEXT_WIDTH as f32) as f32)),
      (y / ((PIXEL_HEIGHT as f32 / TEXT_HEIGHT as f32) as f32)))
 }
 
-pub fn textspaceToPixelspace(at: (f32, f32)) -> (f32, f32) {
+pub fn textspace_to_pixelspace(at: (f32, f32)) -> (f32, f32) {
     let (x, y) = at;
 
     ((x * ((PIXEL_WIDTH as f32 / TEXT_WIDTH as f32) as f32)),
