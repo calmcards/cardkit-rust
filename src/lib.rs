@@ -50,7 +50,7 @@ impl TextBuffer {
     */
 
     pub fn draw_label(&mut self, left_edge: (f32, f32), s: String) -> &Self {
-        let mut p: Vec2 = top_left.into();
+        let mut p: Vec2 = left_edge.into();
         for c in s.chars() {
             self.set(p.into(), c);
             p += (1.0, 0.0).into();
