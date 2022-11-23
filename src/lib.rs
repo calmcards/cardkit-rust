@@ -211,3 +211,10 @@ impl From<TextPos> for PixelPos  {
             (y * ((PIXEL_HEIGHT as f32 / TEXT_HEIGHT as f32) as f32)).round())
     }
 }
+
+#[repr(C, u32)]
+pub enum PointerType {
+    Mouse,
+    Pen,
+    Touch
+}
