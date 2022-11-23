@@ -61,7 +61,7 @@ impl TextBuffer {
     pub fn draw_box(&mut self, top_left: (f32, f32), inner_width: usize, inner_height: usize, style: BoxStyle) -> &Self {
         let mut p: Vec2 = top_left.into();
 
-        self.set(p, match style {
+        self.set(p.into(), match style {
             BoxStyle::Thin => '┌',
             BoxStyle::Thick => '┏',
             BoxStyle::Double => '╔'
