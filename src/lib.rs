@@ -50,7 +50,7 @@ impl TextBuffer {
     */
 
     pub fn draw_label(&mut self, left_edge: (f32, f32), s: String) -> &Self {
-        let mut p: vec2 = top_left.into();
+        let mut p: Vec2 = top_left.into();
         for c in s.chars() {
             self.set(p.into(), c);
             p += (1.0, 0.0).into();
@@ -59,7 +59,7 @@ impl TextBuffer {
     }
 
     pub fn draw_box(&mut self, top_left: (f32, f32), inner_width: usize, inner_height: usize, style: BoxStyle) -> &Self {
-        let mut p: vec2 = top_left.into();
+        let mut p: Vec2 = top_left.into();
 
         self.set(p, match style {
             BoxStyle::Thin => '┌',
