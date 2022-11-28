@@ -49,6 +49,15 @@ impl TextBuffer {
     }
     */
 
+    pub fn clear(&mut self, c: char) -> &mut Self {
+        for yi in 0..TEXT_HEIGHT {
+            for xi in 0..TEXT_WIDTH {
+                self.data[yi][xi] = c as u32;
+            }
+        }
+        self
+    }
+
     pub fn draw_label(&mut self, left_edge: (f32, f32), s: String) -> &Self {
         let mut p: Vec2 = left_edge.into();
         for c in s.chars() {
@@ -148,6 +157,15 @@ impl PixelBuffer {
             let ry = y.round() as usize;
             self.data[ry][rx] = v;
         }
+    }
+
+    pub fn clear(&mut self, v: u8) -> &mut Self {
+        for yi in 0..PIXEL_HEIGHT {
+            for xi in 0..PIXEL_WIDTH {
+                self.data[yi][xi] = v;
+            }
+        }
+        self
     }
 }
 
