@@ -1,3 +1,5 @@
+pub mod text;
+
 use ultraviolet::vec::Vec2;
 
 pub const TEXT_WIDTH: usize = 80;
@@ -13,13 +15,6 @@ pub struct TextBuffer {
 
 impl Default for TextBuffer {
     fn default() -> Self { Self{data: [[0; TEXT_WIDTH]; TEXT_HEIGHT]} }
-}
-
-#[derive(Copy, Clone)]
-pub enum BoxStyle {
-    Thin,
-    Thick,
-    Double,
 }
 
 impl TextBuffer {
@@ -43,89 +38,12 @@ impl TextBuffer {
         self
     }
 
-    /*
-    pub fn isInArea(topLeft: TextPos, bottomRight: TextPos) {
-
-    }
-    */
-
     pub fn clear(&mut self, c: char) -> &mut Self {
         for yi in 0..TEXT_HEIGHT {
             for xi in 0..TEXT_WIDTH {
                 self.data[yi][xi] = c as u32;
             }
         }
-        self
-    }
-
-    pub fn draw_label(&mut self, left_edge: (f32, f32), s: String) -> &Self {
-        let mut p: Vec2 = left_edge.into();
-        for c in s.chars() {
-            self.set(p.into(), c);
-            p += (1.0, 0.0).into();
-        }
-        self
-    }
-
-    pub fn draw_box(&mut self, top_left: (f32, f32), inner_width: usize, inner_height: usize, style: BoxStyle) -> &Self {
-        let mut p: Vec2 = top_left.into();
-
-        self.set(p.into(), match style {
-            BoxStyle::Thin => '┌',
-            BoxStyle::Thick => '┏',
-            BoxStyle::Double => '╔'
-        });
-        for _ in 0..inner_width {
-            p += (1.0, 0.0).into();
-            self.set(p.into(), match style {
-                BoxStyle::Thin => '─',
-                BoxStyle::Thick => '━',
-                BoxStyle::Double => '═'
-            });
-        }
-        p += (1.0, 0.0).into();
-        self.set(p.into(), match style {
-            BoxStyle::Thin => '┐',
-            BoxStyle::Thick => '┓',
-            BoxStyle::Double => '╗'
-        });
-        for _ in 0..inner_height {
-            p += (0.0, 1.0).into();
-            self.set(p.into(), match style {
-                BoxStyle::Thin => '│',
-                BoxStyle::Thick => '┃',
-                BoxStyle::Double => '║'
-            });
-        }
-        p += (0.0, 1.0).into();
-        self.set(p.into(), match style {
-            BoxStyle::Thin => '┘',
-            BoxStyle::Thick => '┛',
-            BoxStyle::Double => '╝'
-        });
-        for _ in 0..inner_width {
-            p += (-1.0, 0.0).into();
-            self.set(p.into(), match style {
-                BoxStyle::Thin => '─',
-                BoxStyle::Thick => '━',
-                BoxStyle::Double => '═'
-            });
-        }
-        p += (-1.0, 0.0).into();
-        self.set(p.into(), match style {
-            BoxStyle::Thin => '└',
-            BoxStyle::Thick => '┗',
-            BoxStyle::Double => '╚'
-        });
-        for _ in 0..inner_height {
-            p += (0.0, -1.0).into();
-            self.set(p.into(), match style {
-                BoxStyle::Thin => '│',
-                BoxStyle::Thick => '┃',
-                BoxStyle::Double => '║'
-            });
-        }
-
         self
     }
 }
