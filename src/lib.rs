@@ -1,7 +1,5 @@
 pub mod text;
 
-use ultraviolet::vec::Vec2;
-
 pub const TEXT_WIDTH: usize = 80;
 pub const TEXT_HEIGHT: usize = 30;
 
@@ -21,8 +19,8 @@ impl TextBuffer {
     pub fn get(&self, at: (f32, f32)) -> Option<char> {
         let (x, y) = at;
         if 0.0 <= x && x < TEXT_WIDTH as f32 && 0.0 <= y && y < TEXT_HEIGHT as f32 {
-            let rx = x.round() as usize;
-            let ry = y.round() as usize;
+            let rx = x.floor() as usize;
+            let ry = y.floor() as usize;
             return char::from_u32(self.data[ry][rx]);
         }
         None
@@ -31,8 +29,8 @@ impl TextBuffer {
     pub fn set(&mut self, at: (f32, f32), c: char) -> &mut Self {
         let (x, y) = at;
         if 0.0 <= x && x < TEXT_WIDTH as f32 && 0.0 <= y && y < TEXT_HEIGHT as f32 {
-            let rx = x.round() as usize;
-            let ry = y.round() as usize;
+            let rx = x.floor() as usize;
+            let ry = y.floor() as usize;
             self.data[ry][rx] = c as u32;
         }
         self
@@ -61,8 +59,8 @@ impl PixelBuffer {
     pub fn get(&self, at: (f32, f32)) -> Option<u8> {
         let (x, y) = at;
         if 0.0 <= x && x < PIXEL_WIDTH as f32 && 0.0 <= y && y < PIXEL_HEIGHT as f32 {
-            let rx = x.round() as usize;
-            let ry = y.round() as usize;
+            let rx = x.floor() as usize;
+            let ry = y.floor() as usize;
             return Some(self.data[ry][rx]);
         }
         None
@@ -71,8 +69,8 @@ impl PixelBuffer {
     pub fn set(&mut self, at: (f32, f32), v: u8) {
         let (x, y) = at;
         if 0.0 <= x && x < PIXEL_WIDTH as f32 && 0.0 <= y && y < PIXEL_HEIGHT as f32 {
-            let rx = x.round() as usize;
-            let ry = y.round() as usize;
+            let rx = x.floor() as usize;
+            let ry = y.floor() as usize;
             self.data[ry][rx] = v;
         }
     }

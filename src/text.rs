@@ -1,18 +1,23 @@
 use crate::{TextBuffer};
 use ultraviolet::vec::Vec2;
 
+/// Draw a [String] onto the provided [TextBuffer].
 pub fn label(text: &mut TextBuffer, top_left: (f32, f32), s: String) {
     label_with_stride(text, top_left, (1.0, 0.0), s);
 }
 
-pub fn label_with_stride(text: &mut TextBuffer, top_left: (f32, f32), stride: (f32, f32), s: String) {
-    let mut p: Vec2 = top_left.into();
+/// Draw a [String] onto the provided [TextBuffer],
+/// in a way to that each consequtive character is offset
+/// by `stride` from its predecessor, originating at `start`.
+pub fn label_with_stride(text: &mut TextBuffer, start: (f32, f32), stride: (f32, f32), s: String) {
+    let mut p: Vec2 = start.into();
     for c in s.chars() {
         text.set(p.into(), c);
         p += stride.into();
     }
 }
 
+/// Defines the characters to be used when drawing a rectangle.
 #[derive(Copy, Clone)]
 pub struct RectStyle {
     pub top: char,
@@ -55,6 +60,16 @@ impl RectStyle {
         top_right: '╗',
         bottom_left: '╚',
         bottom_right: '╝',
+    };
+    pub const DIAMOND: Self = Self {
+        top: '─',
+        bottom: '─',
+        left: '│',
+        right: '│',
+        top_left: '◆',
+        top_right: '◆',
+        bottom_left: '◆',
+        bottom_right: '◆',
     };
 }
 
