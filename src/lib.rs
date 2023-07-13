@@ -1,10 +1,10 @@
 pub mod text;
 
-pub const TEXT_WIDTH: usize = 80;
-pub const TEXT_HEIGHT: usize = 30;
+pub const TEXT_WIDTH: usize = 50;
+pub const TEXT_HEIGHT: usize = 15;
 
-pub const PIXEL_WIDTH: usize = 640;
-pub const PIXEL_HEIGHT: usize = 480;
+pub const PIXEL_WIDTH: usize = 400;
+pub const PIXEL_HEIGHT: usize = 240;
 
 #[repr(transparent)]
 pub struct TextBuffer {
