@@ -2,14 +2,14 @@ use crate::{TextBuffer};
 use ultraviolet::vec::Vec2;
 
 /// Draw a [String] onto the provided [TextBuffer].
-pub fn label(text: &mut TextBuffer, top_left: (f32, f32), s: String) {
+pub fn label<const W: usize, const H: usize>(text: &mut TextBuffer<W, H>, top_left: (f32, f32), s: String) {
     label_with_stride(text, top_left, (1.0, 0.0), s);
 }
 
 /// Draw a [String] onto the provided [TextBuffer],
 /// in a way to that each consequtive character is offset
 /// by `stride` from its predecessor, originating at `start`.
-pub fn label_with_stride(text: &mut TextBuffer, start: (f32, f32), stride: (f32, f32), s: String) {
+pub fn label_with_stride<const W: usize, const H: usize>(text: &mut TextBuffer<W, H>, start: (f32, f32), stride: (f32, f32), s: String) {
     let mut p: Vec2 = start.into();
     for c in s.chars() {
         text.set(p.into(), c);
@@ -73,7 +73,7 @@ impl RectStyle {
     };
 }
 
-pub fn rect(text: &mut TextBuffer, top_left: (f32, f32), inner_width: usize, inner_height: usize, style: RectStyle) {
+pub fn rect<const W: usize, const H: usize>(text: &mut TextBuffer<W, H>, top_left: (f32, f32), inner_width: usize, inner_height: usize, style: RectStyle) {
     let mut p: Vec2 = top_left.into();
 
     text.set(p.into(), style.top_left);
@@ -101,7 +101,7 @@ pub fn rect(text: &mut TextBuffer, top_left: (f32, f32), inner_width: usize, inn
     }
 }
 
-pub fn bytemap<F>(text: &mut TextBuffer, top_left: (f32, f32), mut f: F)
+pub fn bytemap<const W: usize, const H: usize, F>(text: &mut TextBuffer<W, H>, top_left: (f32, f32), mut f: F)
 where
     F: FnMut(u8) -> char
 {

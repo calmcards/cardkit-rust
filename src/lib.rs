@@ -1,45 +1,41 @@
 pub mod text;
 
-pub const TEXT_WIDTH: usize = 50;
-pub const TEXT_HEIGHT: usize = 15;
+pub const GLYPH_WIDTH: usize = 8;
+pub const GLYPH_HEIGHT: usize = 16;
 
-pub const PIXEL_WIDTH: usize = 400;
-pub const PIXEL_HEIGHT: usize = 240;
 
 #[repr(transparent)]
-pub struct TextBuffer {
-    pub data: [[u32; TEXT_WIDTH]; TEXT_HEIGHT],
+pub struct TextBuffer<const WIDTH: usize, const HEIGHT: usize>([[u32; WIDTH]; HEIGHT]);
+
+impl<const WIDTH: usize, const HEIGHT: usize> Default for TextBuffer<WIDTH, HEIGHT> {
+    fn default() -> Self { Self([[0; WIDTH]; HEIGHT]) }
 }
 
-impl Default for TextBuffer {
-    fn default() -> Self { Self{data: [[0; TEXT_WIDTH]; TEXT_HEIGHT]} }
-}
-
-impl TextBuffer {
+impl<const WIDTH: usize, const HEIGHT: usize> TextBuffer<WIDTH, HEIGHT> {
     pub fn get(&self, at: (f32, f32)) -> Option<char> {
         let (x, y) = at;
-        if 0.0 <= x && x < TEXT_WIDTH as f32 && 0.0 <= y && y < TEXT_HEIGHT as f32 {
+        if 0.0 <= x && x < WIDTH as f32 && 0.0 <= y && y < HEIGHT as f32 {
             let rx = x.floor() as usize;
             let ry = y.floor() as usize;
-            return char::from_u32(self.data[ry][rx]);
+            return char::from_u32(self.0[ry][rx]);
         }
         None
     }
 
     pub fn set(&mut self, at: (f32, f32), c: char) -> &mut Self {
         let (x, y) = at;
-        if 0.0 <= x && x < TEXT_WIDTH as f32 && 0.0 <= y && y < TEXT_HEIGHT as f32 {
+        if 0.0 <= x && x < WIDTH as f32 && 0.0 <= y && y < HEIGHT as f32 {
             let rx = x.floor() as usize;
             let ry = y.floor() as usize;
-            self.data[ry][rx] = c as u32;
+            self.0[ry][rx] = c as u32;
         }
         self
     }
 
     pub fn clear(&mut self, c: char) -> &mut Self {
-        for yi in 0..TEXT_HEIGHT {
-            for xi in 0..TEXT_WIDTH {
-                self.data[yi][xi] = c as u32;
+        for yi in 0..HEIGHT {
+            for xi in 0..WIDTH {
+                self.0[yi][xi] = c as u32;
             }
         }
         self
@@ -47,38 +43,36 @@ impl TextBuffer {
 }
 
 #[repr(transparent)]
-pub struct PixelBuffer {
-    pub data: [[u8; PIXEL_WIDTH]; PIXEL_HEIGHT],
+pub struct PixelBuffer<const WIDTH: usize, const HEIGHT: usize>([[u8; WIDTH]; HEIGHT]);
+
+impl<const WIDTH: usize, const HEIGHT: usize> Default for PixelBuffer<WIDTH, HEIGHT> {
+    fn default() -> Self { Self([[0; WIDTH]; HEIGHT]) }
 }
 
-impl Default for PixelBuffer {
-    fn default() -> Self { Self{data: [[0; PIXEL_WIDTH]; PIXEL_HEIGHT]} }
-}
-
-impl PixelBuffer {
+impl<const WIDTH: usize, const HEIGHT: usize> PixelBuffer<WIDTH, HEIGHT> {
     pub fn get(&self, at: (f32, f32)) -> Option<u8> {
         let (x, y) = at;
-        if 0.0 <= x && x < PIXEL_WIDTH as f32 && 0.0 <= y && y < PIXEL_HEIGHT as f32 {
+        if 0.0 <= x && x < WIDTH as f32 && 0.0 <= y && y < HEIGHT as f32 {
             let rx = x.floor() as usize;
             let ry = y.floor() as usize;
-            return Some(self.data[ry][rx]);
+            return Some(self.0[ry][rx]);
         }
         None
     }
 
     pub fn set(&mut self, at: (f32, f32), v: u8) {
         let (x, y) = at;
-        if 0.0 <= x && x < PIXEL_WIDTH as f32 && 0.0 <= y && y < PIXEL_HEIGHT as f32 {
+        if 0.0 <= x && x < WIDTH as f32 && 0.0 <= y && y < HEIGHT as f32 {
             let rx = x.floor() as usize;
             let ry = y.floor() as usize;
-            self.data[ry][rx] = v;
+            self.0[ry][rx] = v;
         }
     }
 
     pub fn clear(&mut self, v: u8) -> &mut Self {
-        for yi in 0..PIXEL_HEIGHT {
-            for xi in 0..PIXEL_WIDTH {
-                self.data[yi][xi] = v;
+        for yi in 0..HEIGHT {
+            for xi in 0..WIDTH {
+                self.0[yi][xi] = v;
             }
         }
         self
@@ -88,15 +82,15 @@ impl PixelBuffer {
 pub fn pixelspace_to_textspace(at: (f32, f32)) -> (f32, f32) {
     let (x, y) = at;
 
-    ((x / ((PIXEL_WIDTH as f32 / TEXT_WIDTH as f32) as f32)),
-     (y / ((PIXEL_HEIGHT as f32 / TEXT_HEIGHT as f32) as f32)))
+    ((x / GLYPH_WIDTH as f32),
+     (y / GLYPH_HEIGHT as f32))
 }
 
 pub fn textspace_to_pixelspace(at: (f32, f32)) -> (f32, f32) {
     let (x, y) = at;
 
-    ((x * ((PIXEL_WIDTH as f32 / TEXT_WIDTH as f32) as f32)),
-     (y * ((PIXEL_HEIGHT as f32 / TEXT_HEIGHT as f32) as f32)))
+    ((x * GLYPH_WIDTH as f32),
+     (y * GLYPH_HEIGHT as f32))
 }
 
 #[repr(u32)]
